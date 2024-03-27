@@ -31,6 +31,31 @@ public class MoviesController {
         return ResponseEntity.ok().body(moviesService.getById(id));
     }
 
+    @GetMapping("/title")
+    public ResponseEntity<List<Movies>> getMoviesByTitle(@RequestParam("q") String title) {
+        return ResponseEntity.ok().body(moviesService.getByTitle(title));
+    }
+
+    @GetMapping("/englishTitle")
+    public ResponseEntity<List<Movies>> getMoviesByEnglishTitle(@RequestParam("q") String englishTitle) {
+        return ResponseEntity.ok().body(moviesService.getByEnglishTitle(englishTitle));
+    }
+
+    @GetMapping("/director")
+    public ResponseEntity<List<Movies>> getMoviesByDirector(@RequestParam("q") String director) {
+        return ResponseEntity.ok().body(moviesService.getByDirector(director));
+    }
+
+    @PostMapping("/criteria")
+    public ResponseEntity<List<Movies>> getMoviesByCriteria(@RequestBody Movies movie) {
+        return ResponseEntity.ok().body(moviesService.getByCriteriaQuery(movie));
+    }
+
+    @PostMapping("/native")
+    public ResponseEntity<List<Movies>> getMoviesByNative(@RequestBody Movies movie) {
+        return ResponseEntity.ok().body(moviesService.getByNativeQuery(movie));
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Movies addMovie(@RequestBody @Valid Movies movie) {
@@ -43,7 +68,6 @@ public class MoviesController {
         Movies updatedMovie = moviesService.update(movie, id);
         return ResponseEntity.ok().body(updatedMovie);
     }
-
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

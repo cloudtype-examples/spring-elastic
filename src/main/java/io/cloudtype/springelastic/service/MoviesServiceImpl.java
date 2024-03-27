@@ -1,7 +1,9 @@
 package io.cloudtype.springelastic.service;
 
 import io.cloudtype.springelastic.model.Movies;
+import io.cloudtype.springelastic.repository.MoviesCriteriaQueryRepository;
 import io.cloudtype.springelastic.repository.MoviesRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -13,13 +15,12 @@ import java.util.stream.StreamSupport;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class MoviesServiceImpl implements MoviesService {
 
     private final MoviesRepository moviesRepository;
+    private final MoviesCriteriaQueryRepository moviesCriteriaQueryRepository;
 
-    public MoviesServiceImpl(MoviesRepository moviesRepository) {
-        this.moviesRepository = moviesRepository;
-    }
 
     @Override
     public List<Movies> getAll() {
@@ -41,6 +42,46 @@ public class MoviesServiceImpl implements MoviesService {
     public Movies getById(String id) {
         return moviesRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
+    }
+
+    @Override
+    public List<Movies> getByTitle(String title) {
+        return StreamSupport.stream(
+                        Spliterators.spliteratorUnknownSize(
+                                moviesRepository.findByTitle(title).iterator(), 0
+                        ), false
+                )
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Movies> getByEnglishTitle(String englishTitle) {
+        return StreamSupport.stream(
+                        Spliterators.spliteratorUnknownSize(
+                                moviesRepository.findByEnglishTitle(englishTitle).iterator(), 0
+                        ), false
+                )
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Movies> getByDirector(String director) {
+        return StreamSupport.stream(
+                        Spliterators.spliteratorUnknownSize(
+                                moviesRepository.findByDirector(director).iterator(), 0
+                        ), false
+                )
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Movies> getByCriteriaQuery(Movies movie) {
+        return StreamSupport.stream(
+                        Spliterators.spliteratorUnknownSize(
+                                moviesCriteriaQueryRepository.findByCriteriaQuery(movie).iterator(), 0
+                        ), false
+                )
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -68,4 +109,5 @@ public class MoviesServiceImpl implements MoviesService {
     public void deleteById(String id) {
         moviesRepository.deleteById(id);
     }
+
 }
