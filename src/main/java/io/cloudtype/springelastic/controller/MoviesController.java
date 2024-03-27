@@ -46,14 +46,9 @@ public class MoviesController {
         return ResponseEntity.ok().body(moviesService.getByDirector(director));
     }
 
-    @PostMapping("/criteria")
+    @PostMapping("/search")
     public ResponseEntity<List<Movies>> getMoviesByCriteria(@RequestBody Movies movie) {
         return ResponseEntity.ok().body(moviesService.getByCriteriaQuery(movie));
-    }
-
-    @PostMapping("/native")
-    public ResponseEntity<List<Movies>> getMoviesByNative(@RequestBody Movies movie) {
-        return ResponseEntity.ok().body(moviesService.getByNativeQuery(movie));
     }
 
     @PostMapping
